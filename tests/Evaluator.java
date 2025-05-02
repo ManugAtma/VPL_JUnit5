@@ -25,12 +25,12 @@ public class Evaluator {
                 .build();
         TestPlan plan = launcher.discover(request);
 
-        // suppress all output from test class
+        // to suppress all output from test class
         PrintStream originalOut = System.out;
 
         int[] totalMaxPoints = {0}; // total max points for this student task
         int[] totalAchievedPoints = {0}; // total achieved points for this task
-
+        
         launcher.registerTestExecutionListeners(new TestExecutionListener() {
             @Override
             public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
@@ -38,7 +38,7 @@ public class Evaluator {
 
                 if (testIdentifier.isTest()) {
                     TestParser testParser = new TestParser();
-                    // enable output from this class
+                    // temporarily enable output to display test results from this class
                     System.setOut(originalOut);
                     try {
                         TestParser.TestParserResult formattedTest = testParser.parse(testIdentifier, testExecutionResult);
@@ -47,7 +47,7 @@ public class Evaluator {
                                 + formattedTest.getAchievedPoints() + "/"
                                 + formattedTest.getMaxPoints() + " points"
                                 );
-                        // suppress all output from test class
+                        // to suppress output for test class again
                         System.setOut(new PrintStream(OutputStream.nullOutputStream()));
                         totalMaxPoints[0] += formattedTest.getMaxPoints();
                         totalAchievedPoints[0] += formattedTest.getAchievedPoints();
@@ -60,10 +60,11 @@ public class Evaluator {
             }
         });
 
-        System.setOut(new PrintStream(OutputStream.nullOutputStream())); // suppress all output from test class
+        System.setOut(new PrintStream(OutputStream.nullOutputStream())); // to suppress output for test class again
+
         launcher.execute(plan); // run tests
 
-        System.setOut(originalOut);
+        System.setOut(originalOut); // enable output again
         System.out.println("---------------------");
         System.out.println("Total: " + totalAchievedPoints[0] + "/" + totalMaxPoints[0] + " points");
     }
