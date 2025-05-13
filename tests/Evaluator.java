@@ -65,7 +65,8 @@ public class Evaluator {
         launcher.execute(plan); // run tests
 
         System.setOut(originalOut); // enable output again
-        System.out.println("---------------------");
-        System.out.println("Total: " + totalAchievedPoints[0] + "/" + totalMaxPoints[0] + " points");
+        //System.out.println("<--------------------->");
+        //System.out.println("Total: " + totalAchievedPoints[0] + "/" + totalMaxPoints[0] + " points");
+        System.out.println("Grade :=>> " + totalAchievedPoints[0]);
     }
 }

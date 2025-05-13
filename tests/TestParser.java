@@ -32,7 +32,6 @@ public class TestParser {
         return testParserResult;
     }
 
-
     static class TestParserResult {
         private int maxPoints;
         private int achievedPoints;
