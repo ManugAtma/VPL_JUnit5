@@ -11,7 +11,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass
  * <name>_<integer number of points> Otherwise unexpected behaviour might occur. For each test method is displayed:
  * name without number of points, SUCCESSFUL or FAILED, achieved points / max points.
  * At the end the total amounts of achieved and maximum points for this task are displayed.
- * All standard output of the test class is suppressed so that students cannot see it. This class requires class Formater.
+ * All standard output of the test class is suppressed so that students cannot see it. This class requires class TestParser.
  */
 public class Evaluator {
 
@@ -21,7 +21,9 @@ public class Evaluator {
         Launcher launcher = LauncherFactory.create();
 
         LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
-                .selectors(selectClass(MyTest.class)) // insert test class here, possible to add multiple test classes as array
+                // insert test class here, possible to add multiple test classes like this
+                // .selectors(selectClass(MyTest1.class), selectClass(MyTest2.class))
+                .selectors(selectClass(MyTest.class), selectClass(MyTest2.class))
                 .build();
         TestPlan plan = launcher.discover(request);
 
@@ -65,8 +67,8 @@ public class Evaluator {
         launcher.execute(plan); // run tests
 
         System.setOut(originalOut); // enable output again
-        //System.out.println("<--------------------->");
-        //System.out.println("Total: " + totalAchievedPoints[0] + "/" + totalMaxPoints[0] + " points");
+        System.out.println("<--------------------->");
+        System.out.println("Total: " + totalAchievedPoints[0] + "/" + totalMaxPoints[0] + " points");
         System.out.println("Grade :=>> " + totalAchievedPoints[0]);
     }
 }
