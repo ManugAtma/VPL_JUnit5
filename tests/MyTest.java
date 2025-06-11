@@ -15,12 +15,12 @@ public class MyTest {
     }
 
     @Test
-    public void testOne_2(){
+    public void testOne_4$5(){
         Assertions.assertTrue(true);
     }
 
     @Test
-    public void testOTwo_6(){
+    public void testOTwo_6$0(){
        Assertions.assertEquals(1, 2);
     }
 }
