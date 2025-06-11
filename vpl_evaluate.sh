@@ -18,26 +18,14 @@ if [ "$?" -ne "0" ]; then
 fi
 
 
-
-
-# cat common_script.sh > vpl_execution
-
+# run Evaluator and save its output to output variable
 output=$(java Evaluator)
 
-# Print all but the last line to stdout
-echo "$output" | awk 'NR > 1 { print prev } { prev = $0 }'
-
-# Get the last line and write it as argument for an echo command to vpl_execution
-last_line=$(echo "$output" | tail -n 1)
-
+# create vpl_execution script
 echo '#!/bin/bash' > vpl_execution
-echo "echo \"$last_line\"" >> vpl_execution
+
+# append Evaluator output to execution script and make it echo the output
+echo "echo \"$output\"" >> vpl_execution
+
+# make execution script executable
 chmod +x vpl_execution
-#cat vpl_execution
-
-
-#echo 'echo "Grade :=>> 99.5"' >> vpl_execution
-
-
-# run java class to evaluate tests and output for students. Note: can only be seen in student role (change role to check) 
-# java Evaluator | tee -a vpl_execution
