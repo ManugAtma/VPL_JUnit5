@@ -1,16 +1,20 @@
 import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.launcher.*;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherFactory;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.*;
 
 /**
  * This class evaluates the tests of one or multiple given test classes using JUnit5.
- * Its output should be passed to vpl_evaluate.sh which in turn should pass it on to vpl_execution.sh.
- * Since the output meets the syntax requested by vpl, vpl can then
+ * Its output should be passed to vpl_evaluate.sh which in turn should pass it on to the
+ * vpl_execution script. Since the output meets the syntax requested by vpl, vpl can then
  * use the generated tests results internally, e.g. display them to the students.
+ *
+ * This class runs all test classes that are in the default package and include
+ * the word "Test" in their class name.
  *
  * Test method identifiers of given test classes must follow this syntax:
  * <name>_<x$y> Here "name" is the actual method name.
@@ -28,7 +32,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass
  * To check the maximum total points for the given test classes, the teacher can temporarily uncomment the
  * sysouts at the end of the main method.
  * All standard output of the given test classes is suppressed so that students cannot see it.
- * This class requires class TestParser and JUnit5 (e.g. junit-platform-console-standalone-1.11.2.jar).
+ * This class requires class Parser and JUnit5 (e.g. junit-platform-console-standalone-1.11.2.jar).
  */
 public class Evaluator {
 
@@ -38,9 +42,9 @@ public class Evaluator {
         Launcher launcher = LauncherFactory.create();
 
         LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
-                // insert test class here, possible to add multiple test classes like this
-                // .selectors(selectClass(MyTest1.class), selectClass(MyTest2.class), ...)
-                .selectors(selectClass(MyTest.class))
+                // select all test classes that are on the classpath, in the default package and include "Test" in their class name
+                .selectors(selectPackage(""))
+                .filters(ClassNameFilter.includeClassNamePatterns(".*Test.*"))
                 .build();
         TestPlan plan = launcher.discover(request);
 
@@ -56,11 +60,11 @@ public class Evaluator {
                 TestExecutionListener.super.executionFinished(testIdentifier, testExecutionResult);
 
                 if (testIdentifier.isTest()) {
-                    TestParser testParser = new TestParser();
+                    Parser parser = new Parser();
                     // temporarily enable output to display test results from this class
                     System.setOut(originalOut);
                     try {
-                        TestParser.TestParserResult formattedTest = testParser.parse(testIdentifier, testExecutionResult);
+                        Parser.TestParserResult formattedTest = parser.parse(testIdentifier, testExecutionResult);
                         System.out.println( "Comment :=>> " +
                                 formattedTest.getMethodName() + " "
                                 + testExecutionResult.getStatus() + " "

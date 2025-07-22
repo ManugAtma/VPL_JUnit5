@@ -1,7 +1,7 @@
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.launcher.TestIdentifier;
 
-public class TestParser {
+public class Parser {
 
     /**
      * This method parses a test method identifier by extracting the achieved
